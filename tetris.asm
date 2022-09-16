@@ -1,15 +1,24 @@
-;Na funçao checaMovimentoObstaculo tem um call TelaFim, coloquei lá só pra testar
 ; funções faltantes: score, apaga linha, game over
 jmp main
 
 Score: var #1 ;variavel para placar
-
 Letra: var #1  ; Guarda a letra digitada
 
 Grid: var #1080
 Peca: var #4 ;vetor que guarda a posição de cada integrante da peça de tetris são 4 no total
 Peca_Tipo: var #1 ;guarda o tipo da peça que são 13 possibilidades
 Vetor_peca_aux: var #4 ;usado para averiguar se uma rotação é valida
+
+;variaveis auxiliares para saber posicao preenchivel da tela e do grid 
+PosInicialApagarTela: var #1
+PosInicialApagarGrid: var #1
+PosInicialApagarGridMaximo: var #1
+PosMaximoApagarTela: var #1
+
+PosInicialApagarTelaFixa: var #1
+PosInicialApagarGridFixa: var #1
+PosInicialApagarGridMaximoFixa: var #1
+PosMaximoApagarTelaFixa: var #1
 
 ; ====== TIPOS DE PEÇA ======= (variações == rotação das peças)
 ;
@@ -31,38 +40,6 @@ Msg4_2: string "                  SSC0513 - ORG. ARQ. COMP."
 Msg5: string "ICMC"
 Msg6: string "Voce perdeu, jogar novamente? <s/n>"
 Msg7: string "Sua pontuacao foi de: "
-
-; Tabela de numeros "aleatorios" de 0 -> 12
-Index_Rand: var #1
-Rand_n: var #1
-Rand: var #25
-	static Rand + #0, #6
-	static Rand + #1, #1
-	static Rand + #2, #9
-	static Rand + #3, #3
-	static Rand + #4, #10
-	static Rand + #5, #0
-	static Rand + #6, #11
-	static Rand + #7, #4
-	static Rand + #8, #2
-	static Rand + #9, #8
-	static Rand + #10, #12
-	static Rand + #11, #3
-	static Rand + #12, #12
-	static Rand + #13, #4
-	static Rand + #14, #1
-	static Rand + #15, #8
-	static Rand + #16, #5
-	static Rand + #17, #7
-	static Rand + #18, #10
-	static Rand + #19, #0
-	static Rand + #20, #9
-	static Rand + #20, #5
-	static Rand + #21, #6
-	static Rand + #22, #2
-	static Rand + #23, #11
-	static Rand + #24, #7
-
 
 main:
     push r0
@@ -127,6 +104,7 @@ main:
     pop r2
 
 Game_start:
+
     push fr
     push r0
     push r1
@@ -144,74 +122,69 @@ Game_start:
     call Inicia_vetor_grid ;grid que monitora estado dos blocos
     call Inicia_peca ; posiçao da peça do jogo
 
+Start_here:
+    
+    push fr
+    push r0
+    push r1
+
+    loadn r0, #0 ; contador de delays
+    loadn r1, #5 ; variavel de delay, quanto maior, maior o delay
+    
+Loop_delay:
+    
+    inc r0
+    cmp r1, r0
+	cne Delay
+    jne Loop_delay
+
+	
+    ; ____Game Logic____
+
+    call copia_peca_para_Vetor_peca_aux
+    
+    ;______Cuida da parte dos comandos______
+    push fr
+    push r2
+    push r3
 
 
-    Start_here:
-        push fr
-        push r0
-        push r1
+    inchar r2 ; guarda o valor digitado pelo jogador
 
-        loadn r0, #0 ; contador de delays
-        loadn r1, #5 ; variavel de delay, quanto maior, maior o delay
-        
+    loadn r3, #' ' ; espaço == gira peça
+    cmp r2, r3
+    ceq Girar_peca ; chama o comando de girar
 
-    Loop_delay:
-        inc r0
-        cmp r1, r0
-		cne Delay
-        jne Loop_delay
+    ;__
 
-		
-	    ; ____Game Logic____
+    loadn r3, #'d'
+    cmp r2, r3
+    ceq incrementa_peca
 
-        call copia_peca_para_Vetor_peca_aux
-        
-            ;______Cuida da parte dos comandos______
-            push fr
-            push r2
-            push r3
+    ;__
 
+    loadn r3, #'a'
+    cmp r2, r3
+    ceq decrementa_peca
 
-            inchar r2 ; guarda o valor digitado pelo jogador
+    ;__
 
-            loadn r3, #' ' ; espaço == gira peça
-            cmp r2, r3
-            ceq Girar_peca ; chama o comando de girar
+    pop fr
+    pop r2
+    pop r3
+    
+    call Desce_peca
+    
+    call Delay_Peca
 
-                ;__
-
-            loadn r3, #'d'
-            cmp r2, r3
-            ceq incrementa_peca
-
-                ;__
-
-            loadn r3, #'a'
-            cmp r2, r3
-            ceq decrementa_peca
-
-                ;__
-
-            pop fr
-            pop r2
-            pop r3
-        
-        call Desce_peca
-        
-        call Delay_Peca
-
-        call Checa_descida ; pensar se coloca isso no inicio do nosso loop
-
-
-        pop fr
-        pop r0
-        pop r1
-        
-        jmp Start_here
-
-        ;TO DO: Unificar todas as checagens de posição seja de decida, esquerda ou direita
-        ;Menos checagem de decida, pq esse precisa parar a peça
-        ;criar função de copiar vetor poce para peca aux
+    call Checa_descida
+    
+    
+    pop fr
+    pop r0
+    pop r1
+    
+    jmp Start_here
         
     pop fr
     pop r0
@@ -224,10 +197,9 @@ Game_start:
     pop r7	
 
 	halt
-
-
-;======================= CORE ====================
+    
 ;--------------- Manipulação tabela rand ------------
+
 Atualiza_rand_index:
     push fr
     push r0
@@ -272,8 +244,9 @@ increment_index_rand:
 
     pop r0
     rts
-;--------------- Fim manipulação tabela rand --------
+    
 ;--------------- Manipulação das peças --------------
+
 Girar_peca:
     ;identifica qual a peça e para qual deve girar 
     ; 0 == não gira
@@ -379,8 +352,7 @@ Girar_peca:
     ceq peca_inicia_tipo_9
     jeq Gira_peca_efetivo_fim
 
-
-    Gira_peca_efetivo_fim:
+Gira_peca_efetivo_fim:
         call Checa_movimento
         call Printa_vetor_peca
         pop fr
@@ -391,7 +363,6 @@ Girar_peca:
         pop r4
         rts
         
-
 Checa_movimento:
     push fr
     push r0
@@ -410,7 +381,8 @@ Checa_movimento:
     loadn r5, #4 ; limite do contador para percorrer peça
     loadn r6, #1
     
-    Checa_movimento_loop_1:
+Checa_movimento_loop_1:
+
         loadn r2, #Grid                       ; carrega o grid
         loadi r1, r0                          ; Pega a posição da peça
         add r2, r2, r1                        ; Coloca grid na posição da peça
@@ -422,14 +394,12 @@ Checa_movimento:
         cmp r4, r5                            ; Checa se esta no fim do loop
         jne Checa_movimento_loop_1            ; Se não esta chama o loop de novo
 
-    ; checa se tem problema com a border
+        loadn r0, #Peca ;checa se tem problema com a border
+        loadn r4, #0 ; contador
+        loadn r5, #4 ; limite do contador para percorrer peça
+        loadn r6, #40
 
-    loadn r0, #Peca
-    loadn r4, #0 ; contador
-    loadn r5, #4 ; limite do contador para percorrer peça
-    loadn r6, #40
-
-    Checa_movimento_loop_2:
+Checa_movimento_loop_2:
         loadi r1, r0                            ; Pega posição da peça
         loadn r2, #11                           ; Indicador de borda esquerda
         loadn r3, #28                           ; Indicador de borda direita
@@ -447,8 +417,7 @@ Checa_movimento:
         cmp r4, r5                              ; Checa se esta no fim do loop
         jne Checa_movimento_loop_2              ; Se não chama loop de novo
 
-
-    Checa_movimento_fim_mov_valido:
+Checa_movimento_fim_mov_valido:
         ;caso valido mantem e da pop nos registradores
         pop fr
         pop r0
@@ -461,11 +430,10 @@ Checa_movimento:
 
         rts
     
-    Checa_movimento_fim_mov_invalido:
+Checa_movimento_fim_mov_invalido:
         ;caso invalido reverte a peça e volta para main func para finalizar
         call Reverte_vetor_peca
         jmp Checa_movimento_fim_mov_valido
-
 
 Reverte_vetor_peca:
     push r0
@@ -533,7 +501,6 @@ copia_peca_para_Vetor_peca_aux:
     pop r3
     rts
 
-
 Atualiza_grid:
     push fr
     push r0
@@ -549,9 +516,7 @@ Atualiza_grid:
     loadn r3, #0 ;contador
     loadn r4, #1
 
-    
-
-    Atualiza_grid_loop:
+Atualiza_grid_loop:
         loadi r1, r0 
         loadn r7, #Grid
         add r7, r7, r1
@@ -564,15 +529,15 @@ Atualiza_grid:
         cmp r2, r3
         jne Atualiza_grid_loop
  
-    
-    pop fr
-    pop r0
-    pop r1
-    pop r2
-    pop r3
-    pop r4
-    pop r7
-    rts
+        
+        pop fr
+        pop r0
+        pop r1
+        pop r2
+        pop r3
+        pop r4
+        pop r7
+        rts
 
 Checa_descida:
     push fr
@@ -591,7 +556,7 @@ Checa_descida:
     loadn r4, #0 ; contador
     loadn r5, #4
 
-    Checa_decida_loop:
+Checa_decida_loop:
         push r6
         loadi r1, r0 ;pega posição da peca
         loadn r6, #Grid ; inicia ponteiro grid
@@ -608,14 +573,13 @@ Checa_descida:
         cmp r4, r5
         jne Checa_decida_loop
     
-    jmp Descida_valida
+        jmp Descida_valida
 
-    Decida_invalida:
-        call Atualiza_grid
-        call Inicia_peca
+Decida_invalida:
+    call Atualiza_grid
+    call Inicia_peca
     
-
-    Descida_valida:
+Descida_valida:
 
     pop fr
     pop r0
@@ -669,10 +633,7 @@ Desce_peca:
 	pop r3
 
 	rts 
-
-
-
-
+    
 incrementa_peca:
     push r0
     push r1
@@ -760,7 +721,7 @@ Printa_vetor_peca: ; printa o vetor peça na posição adequada na tela
     loadn r2, #0 ; contador para as 4 unidades da peça
     loadn r4, #'#'
 
-    Printa_vetor_Peca_loop:
+Printa_vetor_Peca_loop:
         loadi r3, r0
         outchar r4, r3
         inc r0
@@ -769,13 +730,13 @@ Printa_vetor_peca: ; printa o vetor peça na posição adequada na tela
         jne Printa_vetor_Peca_loop
 
 
-    pop fr
-    pop r0
-    pop r1
-    pop r2
-    pop r3
-    pop r4
-    rts
+        pop fr
+        pop r0
+        pop r1
+        pop r2
+        pop r3
+        pop r4
+        rts
 
 Apaga_vetor_peca: ; printa o vetor peça na posição adequada na tela
     push fr
@@ -790,7 +751,7 @@ Apaga_vetor_peca: ; printa o vetor peça na posição adequada na tela
     loadn r2, #0 ; contador para as 4 unidades da peça
     loadn r4, #' '
 
-    Apaga_vetor_Peca_loop:
+Apaga_vetor_Peca_loop:
         loadi r3, r0
         outchar r4, r3
         inc r0
@@ -798,13 +759,13 @@ Apaga_vetor_peca: ; printa o vetor peça na posição adequada na tela
         cmp r2, r1
         jne Apaga_vetor_Peca_loop
 
-    pop fr
-    pop r0
-    pop r1
-    pop r2
-    pop r3
-    pop r4
-    rts
+        pop fr
+        pop r0
+        pop r1
+        pop r2
+        pop r3
+        pop r4
+        rts
 
 Inicia_peca: ; inicia / chama nova peça
 	push fr
@@ -829,8 +790,6 @@ Inicia_peca: ; inicia / chama nova peça
 
     load r2, Rand_n
     store Peca_Tipo, r2
-
-    ; ----- a partir daqui seleciona qual func chamar
 
     loadn r1, #0
     cmp r1, r2
@@ -895,11 +854,6 @@ Inicia_peca: ; inicia / chama nova peça
 
 	rts
 
-; Estou usando como padrão para o inicio das peças a unidade
-; do canto esquerdo inferior
-; Funcionamento:
-; cada função vai pegar a posição inicial do nosso vetor e calcular as outras
-;com base nela
 peca_inicia_tipo_0:
     push fr
     push r0
@@ -936,7 +890,6 @@ peca_inicia_tipo_0:
     pop r3
 
     rts
-
 
 peca_inicia_tipo_1:
     push fr
@@ -1013,7 +966,6 @@ peca_inicia_tipo_2:
 
     rts
 
-
 peca_inicia_tipo_3:
     push fr
     push r0
@@ -1052,7 +1004,6 @@ peca_inicia_tipo_3:
 
     rts
 
-
 peca_inicia_tipo_4:
     push fr
     push r0
@@ -1089,7 +1040,6 @@ peca_inicia_tipo_4:
     pop r3
 
     rts
-
 
 peca_inicia_tipo_5:
     push fr
@@ -1129,7 +1079,6 @@ peca_inicia_tipo_5:
     pop r3
 
     rts
-
 
 peca_inicia_tipo_6:
     push fr
@@ -1206,7 +1155,6 @@ peca_inicia_tipo_7:
     pop r3
 
     rts
-
 
 peca_inicia_tipo_8:
     push fr
@@ -1360,7 +1308,6 @@ peca_inicia_tipo_11:
 
     rts
     
-
 peca_inicia_tipo_12:
     push fr
     push r0
@@ -1399,10 +1346,11 @@ peca_inicia_tipo_12:
     pop r3
 
     rts
+    
 ;--------------- Fim Manipulação das peãs --------------
-;--------------- Manipulação de vetor ------------------
-Inicia_vetor_grid:      ;assinala o valor 0 para todos os elementos do vetor grid
-				        ; 0 == não há obstaculo
+
+Inicia_vetor_grid:;assinala o valor 0 para todos os elementos do vetor grid
+				
 	push fr
 	push r0
 	push r1
@@ -1414,17 +1362,17 @@ Inicia_vetor_grid:      ;assinala o valor 0 para todos os elementos do vetor gri
 	loadn r3, #0
 	loadn r4, #0 ;contador
 
-	grid_loop:
+grid_loop:
 		storei r0, r3
 		inc r0
 		inc r4
 		cmp r4, r1
 		jne grid_loop
 
-    loadn r1, #1080
-	loadn r3, #1
+        loadn r1, #1080
+	   loadn r3, #1
 
-    grid_loop_2:
+grid_loop_2:
 		storei r0, r3
 		inc r0
 		inc r4
@@ -1432,14 +1380,13 @@ Inicia_vetor_grid:      ;assinala o valor 0 para todos os elementos do vetor gri
 		jne grid_loop_2
 
 
-	pop fr
-	pop r0
-	pop r1
-	pop r3
-	pop r4
+	   pop fr
+	   pop r0
+	   pop r1
+	   pop r3
+	   pop r4
 
-	rts
-
+	   rts
 
 ;--------------- Fim manipulação de vetor --------------
 
@@ -1480,7 +1427,9 @@ Delay_Peca:
 	pop r0
 	
 	rts
-;========================= TELAS ==================
+    
+;---------------------- TELAS --------------------------
+
 LimpaTela:
 	push fr		        ;protege o registrador de flags
 	push r0
@@ -1491,11 +1440,11 @@ LimpaTela:
 	loadn r1, #' '		;com "espaco"
     loadn r3, #0
 
-	LimpaTela_Loop: 	; = for(r0=1200; r3>0; r3--)
-		dec r0
-		outchar r1, r0
-        cmp r3, r0
-		jne LimpaTela_Loop
+LimpaTela_Loop: 	; = for(r0=1200; r3>0; r3--)
+	dec r0
+	outchar r1, r0
+    cmp r3, r0
+	jne LimpaTela_Loop
 
     pop r3	
 	pop r1
@@ -1503,7 +1452,6 @@ LimpaTela:
 	pop fr
 	rts
 	
-
 PrintaFrase_2:	
 
 	push fr				
@@ -1517,8 +1465,8 @@ PrintaFrase_2:
     	
 	loadn r3, #'\0'	; Criterio de parada
 	loadn r5, #' '
-
-    PrintaFrase2_Loop:
+  
+PrintaFrase2_Loop:
 	
 		loadi r4, r1		; aponta para a memoria no endereco r1 e busca seu conteudo em r4
 		cmp r4, r3			; compara o codigo do caractere buscado com o criterio de parada
@@ -1528,13 +1476,13 @@ PrintaFrase_2:
 		add r4, r2, r4		; soma a cor (r2) no codigo do caractere em r4
 		outchar r4, r0		; imprime o caractere cujo codigo está em r4 na posicao r0 da tela
 		
-    PrintaFrase2_Skip:
+PrintaFrase2_Skip:
 	
 		inc r0				; incrementa a posicao que o proximo caractere sera' escrito na tela
 		inc r1				; incrementa o ponteiro para a mensagem na memoria
 		jmp PrintaFrase2_Loop	; goto Loop
 	
-    PrintaFrase2_Exit:	;Desempilhamento: resgata os valores dos registradores utilizados na Subrotina da Pilha
+PrintaFrase2_Exit:	;Desempilhamento: resgata os valores dos registradores utilizados na Subrotina da Pilha
 		
 		pop r5
 		pop r4	
@@ -1543,7 +1491,326 @@ PrintaFrase_2:
 		pop r1
 		pop r0
 		pop fr
-		rts		; retorno da subrotina
+		rts
+             
+ApagaPosicaoTela:
+    push r0
+    push r1
+    
+    loadn r1, #' '
+    outchar r1, r2
+    
+    pop r1
+    pop r0
+    rts
+    
+ApagaLinhaTela:
+
+    push r1
+    push r2
+    
+    load r2, PosInicialApagarTela
+    load r1, PosMaximoApagarTela
+    
+ApagaPosicaoTelaLoop:
+
+    call ApagaPosicaoTela
+    
+    inc r2
+    cmp r1, r2
+    jne ApagaPosicaoTelaLoop
+    
+    pop r2
+    pop r1
+    
+    rts
+    
+VerificaTodasLinhasPreenchidas:
+    
+    push r6
+    push r7
+    push r5
+    push r4
+    push r3
+    push r1
+    push r0
+    
+    load r2, PosInicialApagarTelaFixa
+    load r1, PosInicialApagarTela
+    
+    loadn r0, #880
+    sub r2, r2, r0
+    
+SubtraiPosicoes:
+    
+        loadn r0, #40
+        call VerificaLinhaPreenchida
+        
+        load r1, PosInicialApagarGrid
+        sub r1, r1, r0
+        store PosInicialApagarGrid, r1
+        
+        load r1, PosInicialApagarGridMaximo
+        sub r1, r1, r0
+        store PosInicialApagarGridMaximo, r1
+        
+        load r1, PosMaximoApagarTela
+        sub r1, r1, r0
+        store PosMaximoApagarTela, r1
+        
+        load r1, PosInicialApagarTela
+        sub r1, r1, r0
+        store PosInicialApagarTela, r1
+        
+        cmp r2, r1
+        cne SubtraiPosicoes
+    
+VerificaTodasLinhasPreenchidasReturn:
+    
+    loadn r0, #880
+    add r2, r2, r0
+    
+    ;AtualizaGridTelaLoop:
+    
+    ;call VerificaAbaixoGrid
+    ;call VerificaAbaixoTela
+    
+    ;load r1, PosInicialApagarTela
+    
+    ;cmp r1, r2
+        ;jne AtualizaGridTelaLoop
+    
+    ;;retorna valores para iniciais
+    load r0, PosInicialApagarGridFixa
+    store PosInicialApagarGrid, r0
+    
+    load r0, PosInicialApagarTelaFixa
+    store PosInicialApagarTela, r0
+    
+    load r0, PosInicialApagarGridMaximoFixa
+    store PosInicialApagarGridMaximo, r0
+    
+    load r0, PosMaximoApagarTelaFixa
+    store PosMaximoApagarTela, r0
+    
+    
+    pop r0
+    pop r1
+    pop r3
+    pop r4
+    pop r5
+    pop r7
+    pop r6
+    
+    rts
+    
+VerificaAbaixoGrid:
+
+    push fr
+    push r0
+    push r2
+    push r3
+    push r1
+    push r4
+    push r5
+    
+    load r0, PosInicialApagarGrid
+    load r2, PosInicialApagarGridMaximo
+    loadn r1, #40
+    loadn r3, #0
+    
+    add r4, r0, r2
+
+AtualizaGridLinhaSuperior:
+            
+        loadi r5, r4
+        cmp r5, r3
+        jeq CampoNVazioAbaixo
+        
+        storei r4, r3
+        
+        CampoNVazioAbaixo:
+        inc r0
+        inc r4
+        cmp r2, r0
+        jne AtualizaGridZeraLinha
+    
+        add r0, r0, r3
+        store PosInicialApagarGrid, r0
+        
+        pop r5
+        pop r4
+        pop r1
+        pop r3
+        pop r2
+        pop r0
+        pop fr
+    
+        rts
+    
+VerificaAbaixoTela:
+
+    push fr
+    push r0
+    push r2
+    push r3
+    push r1
+    push r4
+    push r5
+    
+    load r0, PosInicialApagarTela
+    load r2, PosMaximoApagarTela
+    
+    loadn r1, #40
+    loadn r3, #'A'
+    loadn r7, #' '
+    
+    add r4, r0, r2
+
+    AtualizaTelaLinhaSuperior:
+            
+        loadi r5, r4
+        cmp r5, r3
+        jeq TelaNVazioAbaixo
+        
+        outchar r4, r3
+        outchar r0, r7
+        
+        TelaNVazioAbaixo:
+        inc r0
+        inc r4
+        cmp r2, r0
+        jne AtualizaTelaLinhaSuperior
+    
+    add r0, r0, r3
+    store PosInicialApagarTela, r0
+    
+    pop r5
+    pop r4
+    pop r1
+    pop r3
+    pop r2
+    pop r0
+    pop fr
+    
+    rts
+     
+VerificaLinhaPreenchida:
+
+    push r6
+    push r7
+    push r5
+    push r4
+    push r3
+    push r0
+    
+    load r7, PosInicialApagarGrid
+    load r3, PosInicialApagarGrid
+    load r6, PosInicialApagarGridMaximo
+    
+    
+    VerificaLinhaPreenchidaLoop:
+    loadn r5, #1
+    inc r3
+    
+    cmp r3, r6
+    jeq FimVerificaLinhaPreenchida
+    
+    
+    loadi r4, r3
+    
+    cmp r4, r5
+        jeq VerificaLinhaPreenchidaLoop
+    
+    cmp r4, r5
+        jne FimVerificaLinhaPreenchida
+    
+    
+    cmp r3, r6
+        jne VerificaLinhaPreenchida
+      
+FimVerificaLinhaPreenchida:
+    cmp r4, r5
+    jne FimVerificaLinhaPreenchidaNMudanca
+    
+    ceq ApagaLinhaTela
+    ceq ApagaLinhaDoGrid
+
+FimVerificaLinhaPreenchidaNMudanca:
+    pop r0
+    pop r3
+    pop r4
+    pop r5
+    pop r7
+    pop r6
+    
+    rts
+    
+ApagaLinhaDoGrid:
+
+    push fr
+    push r0
+    push r2
+    push r3
+
+
+    load r0, PosInicialApagarGrid
+    load r2, PosInicialApagarGridMaximo
+    loadn r3, #0
+
+AtualizaGridZeraLinha:
+            
+        storei r0, r3
+
+        inc r0
+        cmp r2, r0
+        jne AtualizaGridZeraLinha
+    
+    
+        pop r3
+        pop r2
+        pop r0
+        pop fr
+        
+        rts
+    
+SavePosicoesIniciaisTelaGrid:
+
+    push fr
+    push r7
+    push r6
+    push r5
+
+    loadn r6, #Grid
+    
+    loadn r5, #8
+    loadn r7, #1004
+    
+    add r7, r7, r6
+    store PosInicialApagarTela, r7
+    store PosInicialApagarTelaFixa, r7
+    
+    add r5, r5, r7
+    store PosInicialApagarGrid, r5
+    store PosInicialApagarGridFixa, r5
+    
+    loadn r5, #8
+    loadn r7, #1020
+    
+    add r7, r7, r6
+    store PosMaximoApagarTela, r7
+    store PosMaximoApagarTelaFixa, r7
+    
+    add r5, r5, r7
+    store PosInicialApagarGridMaximo, r5
+    store PosInicialApagarGridMaximoFixa, r5
+    
+    
+    pop r5
+    pop r6
+    pop r7
+    pop fr
+    rts
 	
 ImprimeTela:
 
@@ -1667,6 +1934,7 @@ DigitaAlgo:
  	rts	
 
 PrintaFrase:	
+
 	push fr				
 	push r0	; Posicao da tela que o primeiro caractere da mensagem sera' impresso
 	push r1	; endereco onde comeca a mensagem
@@ -1680,7 +1948,7 @@ PrintaFrase:
 	
 	loadn r3, #'\0'	; Criterio de parada
 
-	Print_Str_Loop:	
+Print_Str_Loop:	
 		loadi r4, r1		; aponta para a memoria no endereco r1 e busca seu conteudo em r4
 		cmp r4, r3			; compara o codigo do caractere buscado com o criterio de parada
 		jeq Print_Str_Exit	; goto Final da rotina
@@ -1693,7 +1961,7 @@ PrintaFrase:
 		inc r1				; incrementa o ponteiro para a mensagem na memoria
 		jmp Print_Str_Loop	; goto Loop
 	
-	Print_Str_Exit:	
+Print_Str_Exit:	
 	;---- Desempilhamento: resgata os valores dos registradores utilizados na Subrotina da Pilha
 
 		pop r4	
@@ -1704,7 +1972,7 @@ PrintaFrase:
 		pop fr
 		rts		; retorno da subrotina
 	
-; Tela do Jogo
+;--------------------------- TELAS ----------------------------
 
 tela1Linha0  : string "                                        "
 tela1Linha1  : string "                                        "
@@ -1799,8 +2067,6 @@ tela4Linha27 : string "                                        "
 tela4Linha28 : string "                                        "
 tela4Linha29 : string "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 
-
-
 tela8Linha0  : string "                                        "
 tela8linha1  : string "                                        "
 tela8Linha2  : string "                                        "
@@ -1832,14 +2098,12 @@ tela8Linha27 : string "                                        "
 tela8Linha28 : string "                                 |xxxz  "
 tela8Linha29 : string "                                        "
 
-; Tela de Instrucoes
-
 Tela7Linha0  : string "                                        "
 Tela7Linha1  : string "               INSTRUCOES               "
 Tela7Linha2  : string "                                        "
 Tela7Linha3  : string "                                        "
-Tela7Linha4  : string "         JOGO PARA A MATERIA DE         "
-Tela7Linha5  : string "  ORGANIZACAO DE COMPUTADORES DIGITAIS  "
+Tela7Linha4  : string "       ORG ARQ DE COMPUTADORES 2022     "
+Tela7Linha5  : string "    ORG DE COMPUTADORES DIGITAIS 2021   "
 Tela7Linha6  : string "                                        "
 Tela7Linha7  : string "        MINISTRADA PELO PROFESSOR       "
 Tela7Linha8  : string "         EDUARDO DO VALLE SIMOES        "

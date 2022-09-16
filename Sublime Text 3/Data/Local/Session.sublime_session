@@ -16,6 +16,14 @@
 				"selected_items":
 				[
 					[
+						"Ver",
+						"VerificaLinhaPreenchida	abc"
+					],
+					[
+						"Ap",
+						"ApagaLinhaTela	abc"
+					],
+					[
 						"_y",
 						"_y"
 					],
@@ -36,20 +44,10 @@
 			"buffers":
 			[
 				{
-					"contents": "Package Control Messages\n========================\n\nPackage Control:\n---------------\n\n  Version 3.4.0 Release Notes\n  \n   -----------------------------------------------------------------------\n  | NOTICE: This will be the final release of Package Control supporting  |\n  | - Sublime Text 2                                                      |\n  | - Sublime Text 3 beta builds (<3143)                                  |\n   -----------------------------------------------------------------------\n  | Please see https://sublimetext.com for an updated build               |\n   -----------------------------------------------------------------------\n  \n  New features include:\n  \n   - Support for repositories hosted on https://gitlab.com - by TheSecEng\n  \n   - An alternative TLS implementation based on the oscrypto Python\n     library, which uses native operating system TLS libraries and\n     certificate handling. See the \"downloader_precedence\" setting to enable.\n  \n   - Preferences now use the side-by-side edit mode\n  \n   - Added command palette entries to enable and disable debug mode for\n     troubleshooting and bug reports\n  \n  Bug fixes include:\n  \n   - Fixed operation on macOS 11.0 Big Sur - by TheSecEng\n  \n   - Improved handling of invalid dependencies - by deathaxe\n  \n   - Corrected handling of unsuccessful downloads with wget - by deathaxe\n  \n   - Fixed various issues with the HTTP caching - by deathaxe\n  \n   - Updated the BitBucket provider to use the 2.0 API - deathaxe\n  \n   - Packages installed via symlinks are now unlinked instead of being\n     deleted when being removed or cleaned up - by rchl\n  \n   - Improved install performance of packages with large numbers of\n     files - by BenjaminSchaaf\n  \n   - Fixed handling of auth with the wininet downloader - by NicholasBuse\n  \n   - Fixed handling BitBucket repositories without a nickname\n  \n   - Resolved deadlocks and ignored packages occuring when removing multiple\n     dependencies at once\n  \n   - Package messages are no longer printed with trailing whitespace on lines\n     with no text - by dnicolson\n  \n\n  Version 3.2 Release Notes\n  \n  This version of Package Control focuses on bug-fixes, with notable changes\n  including:\n  \n   - OS X TLS trust roots are exported using APIs to prevent the error message\n     displayed to some El Capitan users\n  \n   - Theme, syntax and color scheme upgrades have been improved and should result\n     in fewer popup messages when filenames change\n  \n   - Various bugs related to installing dependencies have been resolved\n  \n   - Windows and OS X trust roots are exported in a way that valid/invalid purpose\n     information is now communicated to the OpenSSL-based Python ssl module\n  \n   - Further improvements have been made to handling of git/hg package upgrades\n  \n   - The Windows WinINet downloader has improved compatibility with Windows 10\n  \n\n  Version 3.1 Release Notes\n  \n  Package Control continues its focus on polish and fixing edge-case bugs. Some\n  of the changes in this version include:\n  \n   - quick panel for Install Package now stays open on Windows with recent\n     versions of ST3, even when focus is lost\n   - new \"downloader_precedence\" setting to allow users to use specific HTTP\n     backend due to network proxy or SSL issues\n   - added Install Local Dependency command for package developers to more\n     easily deal with dependencies during development\n   - improved handling of git/hg package upgrade errors\n   - better handling of locked .sublime-package files on Windows\n   - performance improvements for users with a large number of open windows\n  \n  For package developers, the list of available dependencies has been growing:\n  https://github.com/wbond/package_control_channel/blob/master/repository/dependencies.json\n  \n  Enjoy!\n  \n  ",
-					"settings":
-					{
-						"buffer_size": 3796,
-						"line_ending": "Windows",
-						"name": "Package Control Messages",
-						"scratch": true
-					}
-				},
-				{
 					"file": "/C/Users/Usuario/Desktop/Simulador/tetris.asm",
 					"settings":
 					{
-						"buffer_size": 37852,
+						"buffer_size": 41753,
 						"line_ending": "Unix"
 					}
 				}
@@ -86,6 +84,7 @@
 			},
 			"file_history":
 			[
+				"/C/Users/Usuario/Desktop/Simulador/tetris.asm",
 				"/D/Simulador/Hello4.asm",
 				"/D/Teste Ambiente/Hello4.asm",
 				"/D/Teste Ambiente/leString.asm",
@@ -145,53 +144,24 @@
 			"groups":
 			[
 				{
-					"selected": 1,
+					"selected": 0,
 					"sheets":
 					[
 						{
 							"buffer": 0,
-							"semi_transient": false,
-							"settings":
-							{
-								"buffer_size": 3796,
-								"regions":
-								{
-								},
-								"selection":
-								[
-									[
-										3796,
-										3796
-									]
-								],
-								"settings":
-								{
-									"auto_indent": false,
-									"syntax": "Packages/Text/Plain text.tmLanguage",
-									"word_wrap": true
-								},
-								"translation.x": 0.0,
-								"translation.y": 1128.0,
-								"zoom_level": 1.0
-							},
-							"stack_index": 1,
-							"type": "text"
-						},
-						{
-							"buffer": 1,
 							"file": "/C/Users/Usuario/Desktop/Simulador/tetris.asm",
 							"semi_transient": false,
 							"settings":
 							{
-								"buffer_size": 37852,
+								"buffer_size": 41753,
 								"regions":
 								{
 								},
 								"selection":
 								[
 									[
-										132,
-										132
+										96,
+										96
 									]
 								],
 								"settings":
