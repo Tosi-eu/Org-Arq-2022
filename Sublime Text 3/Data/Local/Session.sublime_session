@@ -47,7 +47,7 @@
 					"file": "/C/Users/Usuario/Desktop/Simulador/tetris.asm",
 					"settings":
 					{
-						"buffer_size": 41753,
+						"buffer_size": 70869,
 						"line_ending": "Unix"
 					}
 				}
@@ -153,15 +153,15 @@
 							"semi_transient": false,
 							"settings":
 							{
-								"buffer_size": 41753,
+								"buffer_size": 70869,
 								"regions":
 								{
 								},
 								"selection":
 								[
 									[
-										96,
-										96
+										1478,
+										1478
 									]
 								],
 								"settings":
