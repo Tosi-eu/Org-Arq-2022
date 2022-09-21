@@ -162,7 +162,10 @@ Loop_delay:
 
     call Checa_descida
     
+<<<<<<< HEAD
     call update_score
+=======
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
     
     pop fr
     pop r0
@@ -357,6 +360,10 @@ Checa_movimento:
     push r5
     push r6
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
     ;checa se tem problema com o grid
 
     loadn r0, #Peca
@@ -384,8 +391,13 @@ Checa_movimento_loop_1:
 
 Checa_movimento_loop_2:
         loadi r1, r0                            ; Pega posição da peça
+<<<<<<< HEAD
         loadn r2, #12                           ; Indicador de borda esquerda
         loadn r3, #27                           ; Indicador de borda direita
+=======
+        loadn r2, #11                           ; Indicador de borda esquerda
+        loadn r3, #28                           ; Indicador de borda direita
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
 
         mod r1, r1, r6                          ; Divide posição da peça por 40, Resto precisa estar entre 11 e 28
 
@@ -557,11 +569,68 @@ Checa_decida_loop:
         jne Checa_decida_loop
     
         jmp Descida_valida
+<<<<<<< HEAD
                 
+=======
+        
+Checa_subida:
+    push fr
+    push r0
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
+
+    ;não passar das primeiras linhas
+
+    loadn r0, #Peca
+    loadn r2, #40
+    loadn r3, #1
+    loadn r4, #0 ; contador
+    loadn r5, #4
+
+Checa_subida_loop:
+        push r6
+        loadi r1, r0 ;pega posição da peca
+        loadn r6, #Grid ; inicia ponteiro grid
+        sub r1,r1, r2 ; aumenta 40 (vai para linha de baixo)
+        add r6, r6, r1 ; coloca o ponteiro na posição correspondente
+        loadi r1, r6 ;coloca o calor correspondente no r1
+        pop r6
+
+        cmp r1, r3
+        jeq Subida_invalida
+
+        inc r4
+        inc r0
+        cmp r4, r5
+        jne Checa_subida_loop
+    
+        jmp Subida_valida
+        
+Subida_valida:
+    pop fr
+    pop r0
+    pop r1
+    pop r2
+    pop r3
+    pop r4
+    pop r5
+
+    rts
+        
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
 Decida_invalida:
     call Atualiza_grid
     call Inicia_peca
     
+<<<<<<< HEAD
+=======
+Subida_invalida:
+    ;jmp game_over
+    
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
 Descida_valida:
 
     pop fr
@@ -1923,7 +1992,11 @@ printInicioScreen:
   loadn r1, #0
   loadn r2, #1200
 
+<<<<<<< HEAD
 printInicioScreenLoop:
+=======
+  printInicioScreenLoop:
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
 
     add r3,r0,r1
     loadi r3, r3

@@ -16,10 +16,13 @@
 				"selected_items":
 				[
 					[
+<<<<<<< HEAD
 						"Ch",
 						"Checa_subida	abc"
 					],
 					[
+=======
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
 						"Subida_",
 						"subida_valida"
 					],
@@ -75,7 +78,11 @@
 					"file": "/C/Users/Usuario/Desktop/Simulador/tetris.asm",
 					"settings":
 					{
+<<<<<<< HEAD
 						"buffer_size": 105964,
+=======
+						"buffer_size": 106822,
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
 						"line_ending": "Unix"
 					}
 				}
@@ -181,26 +188,43 @@
 							"semi_transient": false,
 							"settings":
 							{
+<<<<<<< HEAD
 								"buffer_size": 105964,
+=======
+								"buffer_size": 106822,
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
 								"regions":
 								{
 								},
 								"selection":
 								[
 									[
+<<<<<<< HEAD
 										3431,
 										3431
+=======
+										11100,
+										11100
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
 									]
 								],
 								"settings":
 								{
+<<<<<<< HEAD
 									"spell_check": true,
+=======
+									"spell_check": false,
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
 									"syntax": "Packages/Assembly ICMC/Assembly ICMC.tmLanguage",
 									"tab_size": 4,
 									"translate_tabs_to_spaces": true
 								},
 								"translation.x": 0.0,
+<<<<<<< HEAD
 								"translation.y": 2688.0,
+=======
+								"translation.y": 13344.0,
+>>>>>>> 2e5d77aea739d973b989c423a545dfc8cfe5ebc2
 								"zoom_level": 1.0
 							},
 							"stack_index": 0,
