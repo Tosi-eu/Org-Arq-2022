@@ -16,6 +16,30 @@
 				"selected_items":
 				[
 					[
+						"Subida_",
+						"subida_valida"
+					],
+					[
+						"at",
+						"Atualiza_grid"
+					],
+					[
+						"pl",
+						"player_score_update_10	abc"
+					],
+					[
+						"up",
+						"player_score_update"
+					],
+					[
+						"Sc",
+						"Score	abc"
+					],
+					[
+						"pri",
+						"printInicioScreen	abc"
+					],
+					[
 						"Ver",
 						"VerificaLinhaPreenchida	abc"
 					],
@@ -47,7 +71,7 @@
 					"file": "/C/Users/Usuario/Desktop/Simulador/tetris.asm",
 					"settings":
 					{
-						"buffer_size": 70869,
+						"buffer_size": 106822,
 						"line_ending": "Unix"
 					}
 				}
@@ -153,26 +177,26 @@
 							"semi_transient": false,
 							"settings":
 							{
-								"buffer_size": 70869,
+								"buffer_size": 106822,
 								"regions":
 								{
 								},
 								"selection":
 								[
 									[
-										1478,
-										1478
+										11100,
+										11100
 									]
 								],
 								"settings":
 								{
-									"spell_check": true,
+									"spell_check": false,
 									"syntax": "Packages/Assembly ICMC/Assembly ICMC.tmLanguage",
 									"tab_size": 4,
 									"translate_tabs_to_spaces": true
 								},
 								"translation.x": 0.0,
-								"translation.y": 0.0,
+								"translation.y": 13344.0,
 								"zoom_level": 1.0
 							},
 							"stack_index": 0,
